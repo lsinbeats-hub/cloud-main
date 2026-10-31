@@ -74,6 +74,8 @@ export const ImageManagerModal: React.FC = () => {
     { key: "instagram_6", label: "Post Instagram 06 (Social)", section: "Instagram" },
     { key: "instagram_7", label: "Post Instagram 07 (Google Maps)", section: "Instagram" },
     { key: "instagram_8", label: "Post Instagram 08 (Performance)", section: "Instagram" },
+    { key: "instagram_9", label: "Post Instagram 09 (Mídia & Social)", section: "Instagram" },
+    { key: "instagram_10", label: "Post Instagram 10 (Ecossistema Cloud)", section: "Instagram" },
   ];
 
   return (

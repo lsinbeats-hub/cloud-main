@@ -3,6 +3,7 @@ import { getWhatsAppUrl } from "../config/agency.ts";
 import { ArrowRight, Code, Laptop, Bot, Palette } from "lucide-react";
 import { ScrollReveal } from "./ScrollReveal.tsx";
 import { useSiteImages } from "../context/ImageContext.tsx";
+import aboutImg from "../assets/images/regenerated_image_1793456215706.jpg";
 
 export const AboutSection: React.FC = () => {
   const { images } = useSiteImages();
@@ -102,7 +103,7 @@ export const AboutSection: React.FC = () => {
             <ScrollReveal animation="fade-left" delay={250} className="w-full">
               <div className="w-full rounded-xl overflow-hidden shadow-md border border-slate-200 bg-slate-100 group h-64 sm:h-72">
                 <img
-                  src={images.about || "/assets/aistudio/85aa887e-2bc9-425c-abab-3387040edc7e_f6cb26b6.png"}
+                  src={images.about || aboutImg}
                   alt="Soluções Digitais Cloud Creative"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   loading="lazy"

@@ -1,4 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import aboutImg from "../assets/images/regenerated_image_1793456215706.jpg";
+import insta6Img from "../assets/images/regenerated_image_1793456218857.png";
+import insta8Img from "../assets/images/regenerated_image_1793456221819.jpg";
 
 export interface SiteImages {
   logo: string;
@@ -12,20 +15,24 @@ export interface SiteImages {
   instagram_6: string;
   instagram_7: string;
   instagram_8: string;
+  instagram_9: string;
+  instagram_10: string;
 }
 
 export const DEFAULT_IMAGES: SiteImages = {
   logo: "/assets/aistudio/snapedit_1792858477180_02765559.png",
   hero: "/assets/aistudio/Solu__es_digitais_em_neon_azul__2__8924eb69.png",
-  about: "/assets/aistudio/85aa887e-2bc9-425c-abab-3387040edc7e_f6cb26b6.png",
-  instagram_1: "/assets/aistudio/Cloud_logo_80bda40e.jpeg",
-  instagram_2: "/assets/aistudio/85aa887e-2bc9-425c-abab-3387040edc7e_f6cb26b6.png",
-  instagram_3: "/assets/aistudio/snapedit_1792858477180_02765559.png",
-  instagram_4: "/assets/aistudio/cloud_mockup_transparent.png",
-  instagram_5: "/assets/aistudio/image_e2374754.png",
-  instagram_6: "/assets/instagram/media_1793320106079_faa86189.jpg",
-  instagram_7: "/assets/aistudio/image_e2374754.png",
-  instagram_8: "/assets/aistudio/Solu__es_digitais_em_neon_azul__2__8924eb69.png",
+  about: aboutImg,
+  instagram_1: "/assets/gallery/site.png",
+  instagram_2: insta6Img,
+  instagram_3: "/assets/gallery/local.jpg",
+  instagram_4: "/assets/gallery/design.png",
+  instagram_5: "/assets/gallery/portfolio.png",
+  instagram_6: "/assets/gallery/criativo.jpg",
+  instagram_7: "/assets/gallery/criativo 2.jpg",
+  instagram_8: "/assets/gallery/criativo 3.png",
+  instagram_9: insta8Img,
+  instagram_10: "/assets/gallery/cloud.jpg",
 };
 
 export const PRESET_THEMES: {
@@ -109,7 +116,7 @@ interface ImageContextType {
   setTargetKeyForEdit: (key: keyof SiteImages | null) => void;
 }
 
-const STORAGE_KEY = "cloud_creative_custom_images_v5";
+const STORAGE_KEY = "cloud_creative_custom_images_v7";
 
 const ImageContext = createContext<ImageContextType | undefined>(undefined);
 

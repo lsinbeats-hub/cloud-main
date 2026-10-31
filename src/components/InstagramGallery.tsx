@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { AGENCY_CONFIG } from "../config/agency.ts";
 import { useSiteImages, SiteImages, DEFAULT_IMAGES } from "../context/ImageContext.tsx";
-import { Instagram, Heart, MessageCircle, ArrowUpRight, ExternalLink, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { Instagram, Heart, MessageCircle, ArrowUpRight, ExternalLink, X, ChevronLeft, ChevronRight, Upload, Camera } from "lucide-react";
 import { ScrollReveal } from "./ScrollReveal.tsx";
 
 interface InstagramPost {
@@ -15,84 +15,170 @@ interface InstagramPost {
 }
 
 export const InstagramGallery: React.FC = () => {
-  const { images, setIsManagerOpen, setTargetKeyForEdit } = useSiteImages();
+  const { images, updateImage } = useSiteImages();
   const [selectedPost, setSelectedPost] = useState<InstagramPost | null>(null);
+  const [activeUploadKey, setActiveUploadKey] = useState<keyof SiteImages | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
   const carouselRef = useRef<HTMLDivElement>(null);
+  const fileBatchInputRef = useRef<HTMLInputElement>(null);
+  const fileSingleInputRef = useRef<HTMLInputElement>(null);
 
   const posts: InstagramPost[] = [
     {
       id: "post-1",
       imageKey: "instagram_1",
-      category: "Identidade & 3D",
-      tag: "Branding",
-      caption: "A presença digital da sua empresa começa na primeira impressão. Design exclusivo e posicionamento de alto valor.",
-      likes: 184,
-      comments: 29,
+      category: "Criação de Sites",
+      tag: "Site Profissional",
+      caption: "Sua marca precisa de um site. Mais acessos, mais visibilidade. Mais do que postar, é hora de ter presença profissional na internet com a Cloud Creative.",
+      likes: 382,
+      comments: 48,
     },
     {
       id: "post-2",
       imageKey: "instagram_2",
-      category: "Desenvolvimento Web",
-      tag: "Landing Page",
-      caption: "Landing page de alta conversão entregue com foco em agendamentos diretos pelo WhatsApp. Design limpo e responsivo.",
-      likes: 247,
-      comments: 38,
+      category: "Automação & IA",
+      tag: "Chatbot WhatsApp",
+      caption: "5 motivos para usar Chatbot em seus atendimentos: atendimento 24/7, automação eficiente, respostas rápidas, integração fácil e escalabilidade total.",
+      likes: 415,
+      comments: 56,
     },
     {
       id: "post-3",
       imageKey: "instagram_3",
-      category: "Bastidores",
-      tag: "Processo",
-      caption: "Alinhando briefing e arquitetura técnica para novos clientes. Todo projeto segue prazos rigorosos em dias úteis.",
-      likes: 312,
-      comments: 45,
+      category: "Presença no Google",
+      tag: "Google Meu Negócio",
+      caption: "Sua empresa pode ser encontrada todos os dias... sem anúncio. Com o Perfil da sua Empresa no Google, mais clientes te conhecem e escolhem seu negócio.",
+      likes: 329,
+      comments: 34,
     },
     {
       id: "post-4",
       imageKey: "instagram_4",
-      category: "Automação & IA",
-      tag: "Chatbot WhatsApp",
-      caption: "Atendimento automático e inteligente 24/7. Responda dúvidas frequentes e transfira contatos qualificados para a equipe.",
-      likes: 219,
-      comments: 31,
+      category: "Design Estratégico",
+      tag: "Design & Artes",
+      caption: "Sua rede social precisa de um design. Flyers, logotipo e artes para social media com padrão visual de excelência que valorizam sua marca.",
+      likes: 294,
+      comments: 39,
     },
     {
       id: "post-5",
       imageKey: "instagram_5",
-      category: "E-commerce & Catálogo",
-      tag: "Site Completo",
-      caption: "Catálogo de até 30 produtos com pedidos enviados direto para o WhatsApp comercial, sem intermediários ou taxas.",
-      likes: 195,
-      comments: 24,
+      category: "Portfólio Web",
+      tag: "Nossos Sites",
+      caption: "Portfólio Cloud Creative Studio: Transformamos ideias em experiências digitais que conectam pessoas. Conheça nossos sites.",
+      likes: 462,
+      comments: 61,
     },
     {
       id: "post-6",
       imageKey: "instagram_6",
-      category: "Design para Redes",
-      tag: "Artes Feed & Stories",
-      caption: "Campanhas visuais que geram retenção e valorizam promoções sazonais. Peças com tipografia marcante e contraste estudado.",
-      likes: 278,
-      comments: 42,
+      category: "Estratégia Digital",
+      tag: "Retorno & Vendas",
+      caption: "Quanto dinheiro você tá perdendo por não ter uma estratégia digital validada? Spoiler: muito mais que imagina.",
+      likes: 371,
+      comments: 47,
     },
     {
       id: "post-7",
       imageKey: "instagram_7",
-      category: "Presença no Google",
-      tag: "Google Maps",
-      caption: "Organização completa do Perfil da Empresa no Google. Fotos em alta resolução, horários corretos e rotas diretas.",
-      likes: 164,
-      comments: 18,
+      category: "Planejamento Web",
+      tag: "Conversão Real",
+      caption: "Ter um site sem estratégia é como abrir uma loja incrível no meio da Amazônia. Posicione sua marca no lugar certo com a Cloud Creative.",
+      likes: 520,
+      comments: 73,
     },
     {
       id: "post-8",
       imageKey: "instagram_8",
-      category: "Alta Performance",
-      tag: "Cloud Creative",
-      caption: "Tecnologia de ponta para empresas que buscam transformar visitantes em clientes qualificados todos os dias.",
-      likes: 340,
+      category: "Branding de Impacto",
+      tag: "Marcas que Ficam",
+      caption: "Criamos marcas que não apenas existem, mas que impactam. Vamos construir a presença digital da sua empresa hoje?",
+      likes: 388,
+      comments: 41,
+    },
+    {
+      id: "post-9",
+      imageKey: "instagram_9",
+      category: "Mídia & Redes",
+      tag: "Social Media",
+      caption: "Sua marca pode mais. Estratégia, design e mídia que fazem barulho do jeito certo, transformando seguidores em clientes fiéis.",
+      likes: 435,
       comments: 52,
     },
+    {
+      id: "post-10",
+      imageKey: "instagram_10",
+      category: "Ecossistema Cloud",
+      tag: "Soluções Digitais",
+      caption: "Somos a Cloud Creative Studio: criatividade, estratégia e design para dar vida à sua marca no digital. Sites, Chatbots, Google e Artes.",
+      likes: 612,
+      comments: 85,
+    },
   ];
+
+  const handleBatchFiles = (fileList: File[]) => {
+    if (fileList.length === 0) return;
+
+    const order: (keyof SiteImages)[] = [
+      "instagram_1",
+      "instagram_2",
+      "instagram_3",
+      "instagram_4",
+      "instagram_5",
+      "instagram_6",
+      "instagram_7",
+      "instagram_8",
+      "instagram_9",
+      "instagram_10",
+    ];
+
+    fileList.forEach((file, index) => {
+      const name = file.name.toLowerCase();
+      let targetKey: keyof SiteImages | null = null;
+      if (name.includes("site") && !name.includes("portfolio")) targetKey = "instagram_1";
+      else if (name.includes("bot")) targetKey = "instagram_2";
+      else if (name.includes("local")) targetKey = "instagram_3";
+      else if (name.includes("design")) targetKey = "instagram_4";
+      else if (name.includes("portfolio")) targetKey = "instagram_5";
+      else if (name.includes("criativo 2") || name.includes("criativo2") || name.includes("amazonia")) targetKey = "instagram_7";
+      else if (name.includes("criativo 3") || name.includes("criativo3") || name.includes("impactam")) targetKey = "instagram_8";
+      else if (name.includes("criativo 4") || name.includes("criativo4") || name.includes("barulho")) targetKey = "instagram_9";
+      else if (name.includes("criativo") || name.includes("dinheiro")) targetKey = "instagram_6";
+      else if (name.includes("cloud")) targetKey = "instagram_10";
+      else if (index < order.length) {
+        targetKey = order[index];
+      }
+
+      if (targetKey) {
+        const reader = new FileReader();
+        const currentKey = targetKey;
+        reader.onload = () => {
+          if (typeof reader.result === "string") {
+            updateImage(currentKey, reader.result);
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  };
+
+  const handleBatchUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleBatchFiles(Array.from(e.target.files || []));
+  };
+
+  const handleSingleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && activeUploadKey) {
+      const reader = new FileReader();
+      const currentKey = activeUploadKey;
+      reader.onload = () => {
+        if (typeof reader.result === "string") {
+          updateImage(currentKey, reader.result);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   // Funções de rolagem pelas setas
   const scrollLeft = () => {
@@ -123,11 +209,39 @@ export const InstagramGallery: React.FC = () => {
                 Galeria @{AGENCY_CONFIG.instagramUsername}
               </h2>
               <p className="mt-1.5 text-xs sm:text-sm text-slate-300 font-normal">
-                Acompanhe nossos lançamentos, conceitos de design, novidades e bastidores da agência.
+                Arraste para navegar pelas 10 postagens oficiais ou selecione suas fotos.
               </p>
             </div>
 
             <div className="flex items-center gap-2.5 shrink-0 flex-wrap">
+              {/* Botão de substituição em lote */}
+              <button
+                type="button"
+                onClick={() => fileBatchInputRef.current?.click()}
+                className="inline-flex items-center gap-2 px-4 py-2.5 text-xs font-black uppercase tracking-wider text-white bg-blue-600 hover:bg-blue-500 rounded-xl transition-all shadow-lg shadow-blue-500/25 hover:-translate-y-0.5 active:scale-95 cursor-pointer"
+                title="Substituir imagens da galeria com as suas fotos"
+              >
+                <Upload className="w-4 h-4" />
+                <span>Carregar Fotos da Galeria</span>
+              </button>
+
+              <input
+                ref={fileBatchInputRef}
+                type="file"
+                multiple
+                accept="image/*"
+                className="hidden"
+                onChange={handleBatchUpload}
+              />
+
+              <input
+                ref={fileSingleInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleSingleUpload}
+              />
+
               <a
                 href={AGENCY_CONFIG.instagramUrl}
                 target="_blank"
@@ -143,7 +257,27 @@ export const InstagramGallery: React.FC = () => {
         </ScrollReveal>
 
         {/* Carrossel com Setas Laterais e Rolagem Suave */}
-        <div className="relative group">
+        <div
+          className={`relative group rounded-2xl transition-all duration-200 ${
+            isDragging ? "ring-2 ring-blue-500 bg-blue-500/5 p-2" : ""
+          }`}
+          onDragOver={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setIsDragging(true);
+          }}
+          onDragLeave={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setIsDragging(false);
+          }}
+          onDrop={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setIsDragging(false);
+            handleBatchFiles(Array.from(e.dataTransfer.files || []));
+          }}
+        >
           
           {/* Botão Seta Flutuante Esquerda */}
           <button
@@ -192,6 +326,21 @@ export const InstagramGallery: React.FC = () => {
                     {post.tag}
                   </span>
                 </div>
+
+                {/* Botão de Trocar Imagem do Card específico no Hover */}
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setActiveUploadKey(post.imageKey);
+                    fileSingleInputRef.current?.click();
+                  }}
+                  className="absolute top-2.5 right-2.5 z-20 p-1.5 rounded-lg bg-black/80 hover:bg-blue-600 text-white opacity-0 group-hover/card:opacity-100 transition-all border border-white/20 shadow-md hover:scale-110"
+                  title="Trocar imagem desta publicação"
+                  aria-label="Trocar imagem desta publicação"
+                >
+                  <Camera className="w-3.5 h-3.5 text-blue-300" />
+                </button>
 
                 {/* Overlay no Hover com Likes e Comentários estilo Instagram */}
                 <div className="absolute inset-0 bg-black/80 opacity-0 group-hover/card:opacity-100 transition-opacity duration-200 flex flex-col items-center justify-center p-4 text-center">
